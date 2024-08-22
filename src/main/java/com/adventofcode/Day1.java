@@ -5,6 +5,7 @@ import com.adventofcode.utils.Util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,64 +22,57 @@ public class Day1 {
         solution.runPart2();
     }
 
-    void runPart1(){
+    private void runPart(Pattern pattern, BiFunction<String, Pattern, Integer> calcCalibrationValue, String part) {
         var sumOfCalibration = 0;
         List<String> lines = Util.readLines(inputFile);
         for (String line : lines) {
-            sumOfCalibration += calibrationValuePart1(line);
+            sumOfCalibration += calcCalibrationValue.apply(line, pattern);
         }
 
-        System.out.println("Part 1: The result is " + sumOfCalibration);
+        System.out.println(part + ": The result is " + sumOfCalibration);
+    }
+
+    void runPart1(){
+        runPart(Pattern.compile("\\d"), Day1::calibrationValuePart1, "Part 1");
     }
 
     void runPart2(){
-        var sumOfCalibration = 0;
-        List<String> lines = Util.readLines(inputFile);
-        for (String line : lines) {
-            sumOfCalibration += calibrationValuePart2(line);
-        }
-
-        System.out.println("Part 2: The result is " + sumOfCalibration);
+        runPart(Pattern.compile("(?=(one|two|three|four|five|six|seven|eight|nine|\\d))"),
+                Day1::calibrationValuePart2, "Part 2");
     }
 
-    private static int calibrationValuePart1(String line) {
-        var firstNumber = true;
+    private static int calibrationValuePart1(String line, Pattern numPattern) {
         List<String> numbers = new ArrayList<>(Arrays.asList("0", "0"));
-        // Apply regexp to line and extract the numbers
-        Pattern numPattern = Pattern.compile("\\d");
+        var firstNumber = true;
+
         Matcher matcher = numPattern.matcher(line);
+
         while (matcher.find()) {
+            String match = matcher.group();
             if (firstNumber) {
-                numbers.set(0, matcher.group());
-                numbers.set(1, matcher.group());
+                numbers.set(0, match);
                 firstNumber = false;
-            } else {
-                // Overwrite the last number until we have the last occurrence
-                numbers.set(1, matcher.group());
             }
+            numbers.set(1, match);
         }
+
         // Concatenate the two numbers and cast it to int
         return Integer.parseInt(numbers.get(0) + numbers.get(1));
     }
 
-    private static int calibrationValuePart2(String line) {
-        var firstNumber = true;
+    private static int calibrationValuePart2(String line, Pattern numPattern) {
         List<String> numbers = new ArrayList<>(Arrays.asList("0", "0"));
-        // Apply regexp to line and extract the numbers
-        Pattern numPattern = Pattern.compile("one|two|three|four|five|six|seven|eight|nine|\\d");
+        var firstNumber = true;
+
         Matcher matcher = numPattern.matcher(line);
-        if (matcher.find()) {
-            do {
-                if (firstNumber) {
-                    numbers.set(0, matcher.group());
-                    numbers.set(1, matcher.group());
-                    firstNumber = false;
-                } else {
-                    // Overwrite the last number until we have the last occurrence
-                    numbers.set(1, matcher.group());
-                }
+
+        while (matcher.find()) {
+            String match = matcher.group(1); // Capture the group within the lookahead
+            if (firstNumber) {
+                numbers.set(0, match);
+                firstNumber = false;
             }
-            while (matcher.find(matcher.start()+1));
+            numbers.set(1, match); // Always update the last number
         }
 
         // Concatenate the two numbers and cast it to int
