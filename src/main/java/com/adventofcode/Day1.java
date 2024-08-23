@@ -12,33 +12,39 @@ import java.util.regex.Pattern;
 import static com.adventofcode.utils.Util.wordToNumber;
 
 public class Day1 {
-    final static String testFile = "day1/test2.txt";
+    final static String testFile1 = "day1/test1.txt";
+    final static String testFile2 = "day1/test2.txt";
     final static String inputFile = "day1/input.txt";
 
     public static void main(String[] args){
         Day1 solution = new Day1();
+
+        var part1 = solution.runPart1(inputFile);
+        var part2 = solution.runPart2(inputFile);
+
         System.out.println("Day 1");
-        solution.runPart1();
-        solution.runPart2();
+        System.out.println("Part 1: The result is " + part1);
+        System.out.println("Part 2: The result is " + part2);
     }
 
-    private void runPart(Pattern pattern, BiFunction<String, Pattern, Integer> calcCalibrationValue, String part) {
+    int runPart(Pattern pattern, BiFunction<String, Pattern, Integer> calcCalibrationValue, String inputFile) {
         var sumOfCalibration = 0;
         List<String> lines = Util.readLines(inputFile);
         for (String line : lines) {
             sumOfCalibration += calcCalibrationValue.apply(line, pattern);
         }
 
-        System.out.println(part + ": The result is " + sumOfCalibration);
+        return sumOfCalibration;
     }
 
-    void runPart1(){
-        runPart(Pattern.compile("\\d"), Day1::calibrationValuePart1, "Part 1");
+    int runPart1(String input){
+        Pattern pattern = Pattern.compile("\\d");
+        return runPart(pattern, Day1::calibrationValuePart1, input);
     }
 
-    void runPart2(){
-        runPart(Pattern.compile("(?=(one|two|three|four|five|six|seven|eight|nine|\\d))"),
-                Day1::calibrationValuePart2, "Part 2");
+    int runPart2(String input){
+        Pattern pattern = Pattern.compile("(?=(one|two|three|four|five|six|seven|eight|nine|\\d))");
+        return runPart(pattern, Day1::calibrationValuePart2, input);
     }
 
     private static int calibrationValuePart1(String line, Pattern numPattern) {
