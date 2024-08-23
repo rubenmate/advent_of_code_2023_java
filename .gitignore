@@ -1,3 +1,6 @@
+# Advent of code
+input.txt
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
