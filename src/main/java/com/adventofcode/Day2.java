@@ -14,7 +14,7 @@ public class Day2 {
     public static void main(String[] args){
         Day2 solution = new Day2();
 
-        var games = initializeGames();
+        var games = initializeGames(inputFile);
 
         var part1 = solution.runPart1(games);
         var part2 = solution.runPart2(games);
@@ -44,9 +44,9 @@ public class Day2 {
         return result;
     }
 
-    static List<Game> initializeGames() {
+    public static List<Game> initializeGames(String file) {
 
-        List<String> lines = Util.readLines(inputFile);
+        List<String> lines = Util.readLines(file);
 
         Pattern gamePattern = Pattern.compile(".*:\\s");
         Pattern rollsPattern = Pattern.compile("(\\d+)\\s(red|green|blue)");
@@ -163,6 +163,30 @@ class Roll {
     public Roll(int redCubes, int greenCubes, int blueCubes) {
         this.redCubes = redCubes;
         this.greenCubes = greenCubes;
+        this.blueCubes = blueCubes;
+    }
+
+    public int getRedCubes() {
+        return redCubes;
+    }
+
+    public void setRedCubes(int redCubes) {
+        this.redCubes = redCubes;
+    }
+
+    public int getGreenCubes() {
+        return greenCubes;
+    }
+
+    public void setGreenCubes(int greenCubes) {
+        this.greenCubes = greenCubes;
+    }
+
+    public int getBlueCubes() {
+        return blueCubes;
+    }
+
+    public void setBlueCubes(int blueCubes) {
         this.blueCubes = blueCubes;
     }
 
